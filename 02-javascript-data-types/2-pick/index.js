@@ -7,9 +7,9 @@
 export const pick = (obj, ...fields) => {
 	const result = {};
 	
-	for ( let field of fields ){
-		if( field in obj ){
-			result[field] = obj[field];
+	for (const [key, value] of Object.entries(obj)) {
+		if (fields.includes(key)) {
+			result[key] = value;
 		}
 	}
 	
