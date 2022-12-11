@@ -1,14 +1,18 @@
 export default class ColumnChart {
-	constructor(params) {
-		if(typeof params === 'object'){
-			for(const [k,v] of Object.entries(params)){
-				this[k] = v;
-			}
-		}
-		if(!this.chartHeight)
-			this.chartHeight = 50;
-		this.render();
-		this.initEventListeners();	
+	constructor({
+				data = [],
+				label = "",
+				link = "",
+				value = 0,
+				chartHeight = 50,
+				formatHeading = data => data
+				} = {}) {
+		this.data = data;
+		this.label = label;
+		this.link = link;
+		this.chartHeight = chartHeight;
+		this.value = formatHeading(value);	
+		this.render();	
 	}
 	
 	getDataList(newData = this.data) {
@@ -20,19 +24,18 @@ export default class ColumnChart {
 	}
 	
 	getTemplate() {
-		let link = (this.link)?this.link:'/#';
+		const link = (this.link)?this.link:'/#';
 		
-		let header = (
+		const header = (
 		this.hasOwnProperty('formatHeading') && 
 		typeof this.formatHeading === 'function'
-		)?this.formatHeading(this.value):
-		this.value;
+		) ? this.formatHeading(this.value) : this.value;
 		
-		let haveData = (!this.data || !this.data.length || this.data.length === 0)?false:true;
-		let addNoDataClass = (!haveData)?' column-chart_loading':'';
-		let entries = (haveData)?this.getDataList():'';
+		const haveData = (!this.data || !this.data.length || this.data.length === 0)?false:true;
+		const addNoDataClass = (!haveData)?' column-chart_loading':'';
+		const entries = (haveData)?this.getDataList():'';
 		return `
-    <div class="column-chart${addNoDataClass}" style="--chart-height: 50">
+    <div class="column-chart${addNoDataClass}" style="--chart-height: ${this.chartHeight}">
       <div class="column-chart__title">
         Total ${this.label}
         <a href="${link}" class="column-chart__link">View all</a>
@@ -51,20 +54,28 @@ export default class ColumnChart {
 		const element = document.createElement("div");
 		element.innerHTML = this.getTemplate();
 		this.element = element.firstElementChild;
+		this.subElements = this.getSubElements();
 	}
 
 	update(newData) {
-		let columnChart = this.element.querySelector(`.column-chart__chart`);
-		columnChart.innerHTML = '';
+		this.subElements.body.innerHTML = '';
 		if( this.data && this.data.length && this.data.length !== 0){
-			columnChart.innerHTML = this.getDataList(newData);
+			this.subElements.body.innerHTML = this.getDataList(newData);
 		}
 	}
+	
+	getSubElements() {
+		const result = {};
+		const elements = this.element.querySelectorAll("[data-element]");
 
-	initEventListeners() {
-		
+		for (const subElement of elements) {
+		  const name = subElement.dataset.element;
+		  result[name] = subElement;
+		}
+
+		return result;
 	}
-
+  
 	remove() {
 		this.element.remove();
 	}

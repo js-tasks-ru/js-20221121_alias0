@@ -1,6 +1,6 @@
 export default class NotificationMessage {
 	
-	static haveOne = false;
+	static prevNotification;
 	
 	constructor(message = '', {
 		duration = 1000,
@@ -33,15 +33,17 @@ export default class NotificationMessage {
 	}
 	
 	show(elem = document.body) {
-		if(NotificationMessage.haveOne) return;
-		NotificationMessage.haveOne = true;
+		if(NotificationMessage.prevNotification){
+			NotificationMessage.prevNotification.remove();
+		};
 		elem.append(this.element);
-		setTimeout(() => (this.remove()),this.duration)
+		NotificationMessage.prevNotification = this;
+		this.timerId = setTimeout(() => (this.remove()),this.duration);
 	}
 	
 	remove() {
+		clearTimeout(this.timerId)
 		this.element.remove();
-		NotificationMessage.haveOne = false;
 	}
 	
 	destroy() {
