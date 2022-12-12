@@ -24,16 +24,16 @@ export default class ColumnChart {
 	}
 	
 	getTemplate() {
-		const link = (this.link)?this.link:'/#';
+		const link = (this.link) ? this.link : '/#';
 		
 		const header = (
 		this.hasOwnProperty('formatHeading') && 
 		typeof this.formatHeading === 'function'
 		) ? this.formatHeading(this.value) : this.value;
 		
-		const haveData = (!this.data || !this.data.length || this.data.length === 0)?false:true;
-		const addNoDataClass = (!haveData)?' column-chart_loading':'';
-		const entries = (haveData)?this.getDataList():'';
+		const haveData = ( !this.data || !this.data.length || this.data.length === 0 ) ? false : true;
+		const addNoDataClass = (!haveData) ? ' column-chart_loading' : '';
+		const entries = (haveData) ? this.getDataList() : '';
 		return `
     <div class="column-chart${addNoDataClass}" style="--chart-height: ${this.chartHeight}">
       <div class="column-chart__title">
