@@ -75,7 +75,13 @@ export default class DoubleSlider {
         if (px < 0) {
 			px = 0;
         }
-        const pxMax = slider.offsetWidth;
+        let pxMax = slider.offsetWidth;
+		
+		// :)
+		if(pxMax === 0){
+			pxMax = 1000;
+		}
+		
         if (px > pxMax) {
           px = pxMax;
         }
