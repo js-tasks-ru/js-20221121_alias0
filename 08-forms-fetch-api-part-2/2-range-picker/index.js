@@ -1,5 +1,5 @@
 export default class RangePicker {
-	
+
 	closeSelector = (event) => {
 		if(this.element.classList.contains('rangepicker_open') && !event.target.closest('.rangepicker__selector') && !event.target.closest('.rangepicker__input')){
 			this.subElements.selector.innerHTML = '';
@@ -216,4 +216,5 @@ export default class RangePicker {
 		this.subElements.selector.removeEventListener("click", this.clickSelector);
 		this.remove();
 	}
+
 }
